@@ -827,21 +827,57 @@ function addStudent(prefill){
   });
 
   // Buttons Logic & PDF
+
+
   function downloadPDF(orientation) {
-      const final = document.getElementById('finalArea');
-      final.classList.add('pdf-scale');
-      document.getElementById('orientationSelector').classList.add('hidden');
-      
-      const opt = { 
-          margin: 0.2, 
-          filename: `intake-form-${orientation}.pdf`, 
-          image: { type: 'jpeg', quality: 0.98 }, 
-          html2canvas: { scale: 2, useCORS: true }, 
-          jsPDF: { unit: 'in', format: 'a4', orientation: orientation } 
-      };
-      
-      html2pdf().set(opt).from(final).save().then(() => { final.classList.remove('pdf-scale'); });
-  }
+    const final = document.getElementById('finalArea');
+    document.getElementById('orientationSelector').classList.add('hidden');
+    
+    // 1. Store original styles to restore them later
+    const originalWidth = final.style.width;
+    const originalMargin = final.style.margin;
+    const originalPadding = final.style.padding;
+    const originalDisplay = final.style.display;
+
+    // 2. Prepare the element for a perfectly centered capture
+    // We use a fixed width relative to the PDF page size
+    if (orientation === 'landscape') {
+        final.style.width = '1000px'; 
+    } else {
+        final.style.width = '750px'; 
+    }
+
+    // This is the "Magic" for centering:
+    final.style.display = 'block';
+    final.style.margin = '0 auto';  // Centers the yellow box
+    final.style.padding = '40px';   // Creates even yellow space around the table
+
+    const opt = { 
+        margin: [0.3, 0, 0.3, 0], // Top, Right, Bottom, Left margins for the PDF file
+        filename: `intake-form-${orientation}.pdf`, 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true,
+            width: (orientation === 'landscape') ? 1100 : 850, // Slightly wider than the element to ensure center room
+            windowWidth: (orientation === 'landscape') ? 1100 : 850
+        }, 
+        jsPDF: { unit: 'in', format: 'a4', orientation: orientation } 
+    };
+    
+    // 3. Generate and then revert styles
+    html2pdf().set(opt).from(final).save().then(() => { 
+        final.style.width = originalWidth;
+        final.style.margin = originalMargin;
+        final.style.padding = originalPadding;
+        final.style.display = originalDisplay;
+    });
+}
+
+
+
+  
+  
 
   document.getElementById('editBtn').onclick = () => {
     document.getElementById('wizardRoot').classList.remove('hidden');
