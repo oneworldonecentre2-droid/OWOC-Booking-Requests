@@ -83,68 +83,16 @@
     #finalArea.pdf-scale { width: 100%; font-size: 10px !important; }
     
     /* Print Media Query */
-
-
-
-/* =========================================
-       PRINT MEDIA QUERY (THE FIX)
-       ========================================= */
     @media print {
-        /* 1. RESET PAGE MARGINS */
-        @page {
-            margin: 0.5cm; /* Small margins to give the table more room */
-            size: auto;    /* Let browser adapt, or use 'landscape' to force it */
-        }
-
-        /* 2. HIDE UI ELEMENTS */
-        .wizard, .nav-buttons, #editBtn, #printBtn, #pdfBtn, #newFormBtn, #orientationSelector { 
-            display: none !important; 
-        }
-
-        /* 3. RESET BODY AND ZOOM */
-        body { 
-            border: none; 
-            background-color: white; 
-            margin: 0; 
-            padding: 0;
-            /* CRITICAL: Scales the content down slightly to ensure it fits on Letter/A4 */
-            zoom: 90%; 
-        }
-
-        /* 4. RESET WRAPPERS */
-        #finalWrap { 
-            display: block !important; 
-            margin: 0 !important; 
-            padding: 0 !important; 
-            width: 100% !important;
-        }
-
-        /* 5. REMOVE CONTAINER PADDING & FORCE BACKGROUND */
-        #finalArea { 
-            border: none !important; 
-            box-shadow: none !important; 
-            width: 100% !important; 
-            /* Remove the padding (p-4) so the table can use full width */
-            padding: 0 !important; 
-            margin: 0 !important;
-            -webkit-print-color-adjust: exact !important; 
-            print-color-adjust: exact !important; 
-            background-color: #fff989 !important; 
-        }
-
-        /* 6. FIX TABLE WIDTH FOR PRINT */
-        /* Overwrite the global min-width so it doesn't force overflow */
-        table.yellow-table {
-            min-width: 0 !important; 
-            width: 100% !important;
-            font-size: 11px; /* Optional: Slight text reduction for better fit */
-        }
-        
+        body { border: none; background-color: white; }
+        .wizard, .nav-buttons, #editBtn, #printBtn, #pdfBtn, #newFormBtn, #orientationSelector { display: none !important; }
+        #finalWrap { display: block !important; margin: 0; padding: 0; }
+        #finalArea { border: none !important; box-shadow: none !important; width: 100%; background-color: white !important; }
+        /* Force background color for print */
+        #finalArea { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fff989 !important; }
+        /* Remove mobile scrolling for print */
         .overflow-x-auto { overflow: visible !important; }
     }
-
-
-    
 
     /* Library Tweaks */
     .select2-container .select2-selection--single { height: 42px; border: 1px solid #d1d5db; padding: 6px; }
