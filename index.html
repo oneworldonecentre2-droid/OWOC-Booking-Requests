@@ -827,32 +827,34 @@ function addStudent(prefill){
   });
 
   // Buttons Logic & PDF
-  function downloadPDF(orientation) {
+ function downloadPDF(orientation) {
     const final = document.getElementById('finalArea');
-    final.classList.add('pdf-scale');
     document.getElementById('orientationSelector').classList.add('hidden');
     
-    // Temporarily fix width to ensure the table doesn't compress during capture
+    // 1. Force a "Paper-like" width during capture
     const originalWidth = final.style.width;
-    final.style.width = (orientation === 'landscape') ? '1050px' : '750px';
+    const originalPadding = final.style.padding;
+    
+    // We set a slightly smaller width and add padding to create the yellow border effect
+    final.style.width = (orientation === 'landscape') ? '1000px' : '700px';
+    final.style.padding = '30px'; 
+    final.style.margin = '0 auto';
 
     const opt = { 
-        // 0.5 inch margin provides plenty of "safe space" on the left
-        margin: 0.5, 
+        margin: 0.3, // Small margin for the PDF file itself
         filename: `intake-form-${orientation}.pdf`, 
         image: { type: 'jpeg', quality: 0.98 }, 
         html2canvas: { 
             scale: 2, 
-            useCORS: true, 
-            logging: false,
-            letterRendering: true
+            useCORS: true,
+            backgroundColor: '#ffffff' // Ensure background outside yellow is white
         }, 
         jsPDF: { unit: 'in', format: 'a4', orientation: orientation } 
     };
     
     html2pdf().set(opt).from(final).save().then(() => { 
-        final.classList.remove('pdf-scale');
-        final.style.width = originalWidth; // Put it back to normal
+        final.style.width = originalWidth;
+        final.style.padding = originalPadding;
     });
 }
 
