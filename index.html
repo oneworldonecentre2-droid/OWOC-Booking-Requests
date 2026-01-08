@@ -827,36 +827,21 @@ function addStudent(prefill){
   });
 
   // Buttons Logic & PDF
- function downloadPDF(orientation) {
-    const final = document.getElementById('finalArea');
-    document.getElementById('orientationSelector').classList.add('hidden');
-    
-    // 1. Force a "Paper-like" width during capture
-    const originalWidth = final.style.width;
-    const originalPadding = final.style.padding;
-    
-    // We set a slightly smaller width and add padding to create the yellow border effect
-    final.style.width = (orientation === 'landscape') ? '1000px' : '700px';
-    final.style.padding = '30px'; 
-    final.style.margin = '0 auto';
-
-    const opt = { 
-        margin: 0.3, // Small margin for the PDF file itself
-        filename: `intake-form-${orientation}.pdf`, 
-        image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true,
-            backgroundColor: '#ffffff' // Ensure background outside yellow is white
-        }, 
-        jsPDF: { unit: 'in', format: 'a4', orientation: orientation } 
-    };
-    
-    html2pdf().set(opt).from(final).save().then(() => { 
-        final.style.width = originalWidth;
-        final.style.padding = originalPadding;
-    });
-}
+  function downloadPDF(orientation) {
+      const final = document.getElementById('finalArea');
+      final.classList.add('pdf-scale');
+      document.getElementById('orientationSelector').classList.add('hidden');
+      
+      const opt = { 
+          margin: 0.2, 
+          filename: `intake-form-${orientation}.pdf`, 
+          image: { type: 'jpeg', quality: 0.98 }, 
+          html2canvas: { scale: 2, useCORS: true }, 
+          jsPDF: { unit: 'in', format: 'a4', orientation: orientation } 
+      };
+      
+      html2pdf().set(opt).from(final).save().then(() => { final.classList.remove('pdf-scale'); });
+  }
 
   document.getElementById('editBtn').onclick = () => {
     document.getElementById('wizardRoot').classList.remove('hidden');
